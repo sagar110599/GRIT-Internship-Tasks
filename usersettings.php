@@ -1,0 +1,221 @@
+<?php
+
+session_start();
+
+if(!isset($_SESSION['id']))
+{
+	header("LOCATION: index.php");
+}
+else
+{
+
+include 'dbh.php';
+
+$userId=mysqli_real_escape_string($conn,$_SESSION['id']);
+
+$sqlx="SELECT profilePicLocation FROM faculty_table WHERE id='$userId'";
+$resultx=mysqli_query($conn,$sqlx);
+$rowx=mysqli_fetch_assoc($resultx);
+$profilePicLocation=$rowx['profilePicLocation'];
+
+include 'top.php';
+include 'left-nav.php';
+
+?>
+	<br>
+	<div class="container">
+    	<div class="row justify-content-center">       
+    		<div class="col-md-6 col-sm-12 parta" style="margin-top: 5px">
+				
+				<?php
+
+				$sql="SELECT email, faculty_name, date_of_joining, department, mobileno, hod, committee, principal, admin FROM faculty_table WHERE id='$userId'";
+				$result=mysqli_query($conn,$sql);
+
+				$row=mysqli_fetch_assoc($result);
+
+				$email=$row['email'];
+				$faculty_name=$row['faculty_name'];
+				$date_of_joining=$row['date_of_joining'];
+				$department=$row['department'];
+				$mobileno=$row['mobileno'];
+				$hod=$row['hod'];
+				$committee=$row['committee'];
+				$principal=$row['principal'];
+				$admin=$row['admin'];
+
+				?>
+
+				<div class="card userprofile-card">
+			      	<div class="card-body">
+			      		<!-- <h1 class="text-center" style="background-color: #44a0b3;color: white">SETTINGS</h1>
+ 						<hr> -->
+ 						<div class="row justify-content-center">
+ 							<div class="col-12">
+ 								<h4 class="text-center" style="color: #44a0b3">General Settings</h4>
+ 								<hr style="border: 0.3px solid #c8c8c8"><br>
+ 								<form action="usersettings-sys.php" method="POST">
+
+		 							<div class="form-inline">
+									  	<label for="email" class="col-form-label mr-sm-3">Email:</label>
+									  	<input type="email" class="form-control d-inline mb-3 usersettingsformcontrol" id="email" name="email" style="width: 280px;margin-left: 60px" value="<?php echo $email; ?>" disabled>
+									</div>
+
+									<div class="form-inline">
+									  	<label for="faculty_name" class="mr-sm-3">Name:</label>
+									  	<input class="form-control partalabel mb-3 usersettingsformcontrol" type="text" name="faculty_name" style="width: 280px;margin-left: 58px" id="faculty_name" value="<?php echo $faculty_name; ?>"/>
+									</div> 
+
+									<div class="form-inline">
+									  	<label for="mobileno" class="mr-sm-3">Mobile No.:</label>
+									  	<input class="form-control partalabel mb-3 usersettingsformcontrol" type="text" name="mobileno" style="width: 280px;margin-left: 27px" id="mobileno" value="<?php echo $mobileno; ?>"/>
+									</div>
+
+									<div class="form-inline">
+									  	<label for="department" class="mr-sm-3">Department:</label>
+									  	<input class="form-control partalabel mb-3 usersettingsformcontrol" type="text" name="department" style="width: 280px;margin-left: 20px" id="department" value="<?php echo $department; ?>" disabled/>
+									</div> 
+									
+									<div class="form-inline">
+									  	<label for="date_of_joining" class="mr-sm-3">Date of Joining:</label>
+									  	<input class="form-control partalabel mb-3 usersettingsformcontrol" type="date" name="date_of_joining" style="width: 280px;margin-left: 1px" id="date_of_joining" value="<?php echo $date_of_joining; ?>" disabled/>
+									</div><br> 
+								  	
+								  	<div class="row justify-content-center">
+								  		<div class="col-md-3">
+								  			<button type="submit" class="btn btn-primary mb-2 setting-save">Save</button>
+										</div>
+									</div>
+								</form> 
+ 							</div>
+ 						</div>
+ 						
+						<hr style="border: 0.5px solid #c8c8c8">
+			        	
+			        	
+ 						<hr style="border: 0.3px solid #c8c8c8">
+
+			        	
+			        	
+			      	</div>
+			    </div>
+
+			</div>
+		</div>
+	</div>
+
+
+
+	<?php 
+
+	if (isset($_GET['result']))
+	{
+		if($_GET['result']=='general')
+		{
+			?>
+		    <script type="text/javascript">
+		    $(document).ready(function(){
+		    	document.getElementById("signin-error").innerHTML="Changes successfully applied.";
+		        $('#myModal').modal('show');
+		    });
+		    </script>
+			<?php 
+		}
+		else if($_GET['result']=='gerror')
+		{
+			?>
+		    <script type="text/javascript">
+		    $(document).ready(function(){
+		    	document.getElementById("signin-error").innerHTML="This email already exists.";
+		        $('#myModal').modal('show');
+		    });
+		    </script>
+			<?php 
+		}
+		else if($_GET['result']=='password')
+		{
+			?>
+		    <script type="text/javascript">
+		    $(document).ready(function(){
+		    	document.getElementById("signin-error").innerHTML="Password changed successfully.";
+		        $('#myModal').modal('show');
+		    });
+		    </script>
+			<?php 
+		}
+		else if($_GET['result']=='perror')
+		{
+			?>
+		    <script type="text/javascript">
+		    $(document).ready(function(){
+		    	document.getElementById("signin-error").innerHTML="Passwords do not match.";
+		        $('#myModal').modal('show');
+		    });
+		    </script>
+			<?php 
+		}
+		else if($_GET['result']=='profilepic')
+		{
+			?>
+		    <script type="text/javascript">
+		    $(document).ready(function(){
+		    	document.getElementById("signin-error").innerHTML="Profile picture successfully changed.";
+		        $('#myModal').modal('show');
+		    });
+		    </script>
+			<?php 
+		}
+		else if($_GET['result']=='ierror')
+		{
+			?>
+		    <script type="text/javascript">
+		    $(document).ready(function(){
+		    	document.getElementById("signin-error").innerHTML="There was an error during profile pic change.";
+		        $('#myModal').modal('show');
+		    });
+		    </script>
+			<?php 
+		}
+	}
+	?>
+
+	<div class="modal fade" id="myModal">
+	  	<div class="modal-dialog">
+		    <div class="modal-content">
+
+		      	<!-- Modal Header -->
+		      	<div class="modal-header">
+			        <h4 class="modal-title">Notice</h4>
+			        <button type="button" class="close" data-dismiss="modal">&times;</button>
+		      	</div>
+
+		      	<div class="modal-body">
+			        <p id="signin-error"></p>
+			    </div>
+
+		      	<!-- Modal footer -->
+		      	<div class="modal-footer">
+		        	<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+		      	</div>
+
+		    </div>
+	  	</div>
+	</div>
+
+<!-- Change file name custom label on upload -->
+<script>
+    $('input[type="file"]').change(function(e){
+        var fileName = e.target.files[0].name;
+        $('.custom-file-label').html(fileName);
+    });
+</script>
+
+
+</body>
+</html>
+
+<?php
+
+}
+
+?>
